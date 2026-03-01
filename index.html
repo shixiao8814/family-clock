@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我们的时光 | 家庭时钟</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #fef9f3;
+      --warm-white: #fffaf5;
+      --rose: #e8b4b8;
+      --dusty-rose: #d4a5a5;
+      --soft-pink: #f5d0c5;
+      --sage: #b8c4a8;
+      --warm-brown: #8b7355;
+      --gold: #c9a86c;
+      --soft-shadow: rgba(139, 115, 85, 0.08);
+      --bloom: rgba(232, 180, 184, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Noto Serif SC', serif;
+      background: var(--cream);
+      overflow-x: hidden;
+      color: var(--warm-brown);
+    }
+
+    /* 背景装饰 */
+    .bg-decoration {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .floating-heart {
+      position: absolute;
+      opacity: 0.2;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .floating-heart:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
+    .floating-heart:nth-child(2) { top: 20%; right: 10%; animation-delay: 2s; }
+    .floating-heart:nth-child(3) { top: 60%; left: 8%; animation-delay: 4s; }
+    .floating-heart:nth-child(4) { top: 80%; right: 5%; animation-delay: 1s; }
+    .floating-heart:nth-child(5) { top: 40%; right: 15%; animation-delay: 3s; }
+    .floating-heart:nth-child(6) { top: 70%; left: 20%; animation-delay: 5s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+
+    .floating-heart svg {
+      width: 40px;
+      height: 40px;
+      fill: var(--dusty-rose);
+    }
+
+    /* 渐变光晕 */
+    .glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+    }
+
+    .glow-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--bloom);
+      top: -100px;
+      right: -100px;
+    }
+
+    .glow-2 {
+      width: 300px;
+      height: 300px;
+      background: rgba(184, 196, 168, 0.3);
+      bottom: -50px;
+      left: -50px;
+    }
+
+    /* 主容器 */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 主标题 */
+    .page-title {
+      font-family: 'Ma Shan Zheng', cursive;
+      font-size: 2.8rem;
+      color: var(--warm-brown);
+      margin-bottom: 12px;
+      text-shadow: 0 2px 20px var(--soft-shadow);
+      letter-spacing: 0.3em;
+    }
+
+    .page-subtitle {
+      font-size: 0.95rem;
+      color: var(--dusty-rose);
+      margin-bottom: 50px;
+      letter-spacing: 0.5em;
+      font-weight: 400;
+    }
+
+    /* 时钟卡片容器 */
+    .clocks-grid {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .clock-card {
+      flex: 1;
+      min-width: 320px;
+      max-width: 420px;
+      background: var(--warm-white);
+      border-radius: 28px;
+      padding: 40px 36px;
+      box-shadow: 
+        0 4px 24px var(--soft-shadow),
+        0 0 0 1px rgba(212, 165, 165, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .clock-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 
+        0 20px 50px var(--soft-shadow),
+        0 0 0 1px rgba(212, 165, 165, 0.15);
+    }
+
+    /* 卡片装饰 */
+    .clock-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--rose), var(--sage));
+      border-radius: 28px 28px 0 0;
+    }
+
+    .clock-card.lover::before {
+      background: linear-gradient(90deg, #c77b7f, #e8b4b8);
+    }
+
+    .clock-card.baby::before {
+      background: linear-gradient(90deg, #b8c4a8, #a8b898);
+    }
+
+    /* 卡片图标 */
+    .card-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+      box-shadow: 0 4px 15px var(--soft-shadow);
+    }
+
+    .lover .card-icon {
+      background: linear-gradient(135deg, #e8b4b8, #c77b7f);
+      animation: pulse-romantic 3s ease-in-out infinite;
+    }
+
+    .lover {
+      border: 1px solid rgba(232, 180, 184, 0.2);
+    }
+
+    .lover:hover {
+      border-color: rgba(232, 180, 184, 0.35);
+    }
+
+    .baby .card-icon {
+      background: linear-gradient(135deg, var(--sage), #9eb38a);
+    }
+
+    @keyframes pulse-romantic {
+      0%, 100% { box-shadow: 0 4px 15px rgba(212, 165, 165, 0.4); }
+      50% { box-shadow: 0 4px 25px rgba(232, 180, 184, 0.6); }
+    }
+
+    .card-subtitle {
+      font-size: 0.9rem;
+      color: var(--dusty-rose);
+      margin-top: -4px;
+      margin-bottom: 24px;
+      letter-spacing: 0.05em;
+    }
+
+    .lover .card-subtitle {
+      font-style: italic;
+    }
+
+    .baby .card-subtitle {
+      color: var(--sage);
+      opacity: 0.9;
+    }
+
+    .card-title {
+      font-family: 'Ma Shan Zheng', cursive;
+      font-size: 2.2rem;
+      color: var(--warm-brown);
+      margin-bottom: 8px;
+      letter-spacing: 0.2em;
+    }
+
+    .card-start {
+      font-size: 0.85rem;
+      color: var(--dusty-rose);
+      margin-bottom: 28px;
+      letter-spacing: 0.1em;
+    }
+
+    /* 时间显示 */
+    .time-display {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .time-unit {
+      flex: 1;
+      min-width: 70px;
+      text-align: center;
+      padding: 16px 12px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 16px;
+      border: 1px solid rgba(212, 165, 165, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .clock-card:hover .time-unit {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: rgba(212, 165, 165, 0.3);
+    }
+
+    .time-value {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--gold);
+      display: block;
+      line-height: 1.3;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .time-label {
+      font-size: 0.75rem;
+      color: var(--dusty-rose);
+      margin-top: 4px;
+      letter-spacing: 0.15em;
+    }
+
+    /* 底部文案 */
+    .footer-note {
+      margin-top: 60px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--dusty-rose);
+      letter-spacing: 0.3em;
+    }
+
+    .footer-hearts {
+      margin-top: 8px;
+      font-size: 1.2rem;
+      letter-spacing: 0.5em;
+    }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      .page-title {
+        font-size: 2rem;
+        letter-spacing: 0.2em;
+      }
+
+      .clocks-grid {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .clock-card {
+        min-width: 100%;
+      }
+
+      .time-unit {
+        min-width: 60px;
+      }
+
+      .time-value {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-decoration">
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="floating-heart">
+      <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+    <div class="floating-heart">
+      <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+    <div class="floating-heart">
+      <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+    <div class="floating-heart">
+      <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+    <div class="floating-heart">
+      <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+    <div class="floating-heart">
+      <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1 class="page-title">我们的时光</h1>
+    <p class="page-subtitle">爱 · 是与你度过的每一个日夜</p>
+
+    <div class="clocks-grid">
+      <div class="clock-card lover">
+        <div class="card-icon">💕</div>
+        <h2 class="card-title">大宝</h2>
+        <p class="card-start">我们在一起 2014.02.24</p>
+        <p class="card-subtitle">已经相爱了</p>
+        <div class="time-display">
+          <div class="time-unit">
+            <span class="time-value" id="lover-years">0</span>
+            <span class="time-label">年</span>
+          </div>
+          <div class="time-unit">
+            <span class="time-value" id="lover-months">0</span>
+            <span class="time-label">月</span>
+          </div>
+          <div class="time-unit">
+            <span class="time-value" id="lover-days">0</span>
+            <span class="time-label">天</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="clock-card baby">
+        <div class="card-icon">👶</div>
+        <h2 class="card-title">小宝</h2>
+        <p class="card-start">出生于 2024.08.06</p>
+        <p class="card-subtitle">来到我们身边</p>
+        <div class="time-display">
+          <div class="time-unit">
+            <span class="time-value" id="baby-years">0</span>
+            <span class="time-label">年</span>
+          </div>
+          <div class="time-unit">
+            <span class="time-value" id="baby-months">0</span>
+            <span class="time-label">月</span>
+          </div>
+          <div class="time-unit">
+            <span class="time-value" id="baby-days">0</span>
+            <span class="time-label">天</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="footer-note">感谢你陪我走过岁月 · 感谢宝宝选择我们做父母</p>
+    <p class="footer-hearts">❤️ ❤️ ❤️</p>
+  </div>
+
+  <script>
+    function parseDate(str) {
+      const [year, month, day] = str.split('.').map(Number);
+      return new Date(year, month - 1, day);
+    }
+
+    function getDiff(startDate, endDate) {
+      let years = endDate.getFullYear() - startDate.getFullYear();
+      let months = endDate.getMonth() - startDate.getMonth();
+      let days = endDate.getDate() - startDate.getDate();
+
+      if (days < 0) {
+        months--;
+        const prevMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0);
+        days += prevMonth.getDate();
+      }
+
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      return { years, months, days };
+    }
+
+    function updateClocks() {
+      const now = new Date();
+      const loverStart = parseDate('2014.02.24');
+      const babyStart = parseDate('2024.08.06');
+
+      const diff1 = getDiff(loverStart, now);
+      const diff2 = getDiff(babyStart, now);
+
+      document.getElementById('lover-years').textContent = diff1.years;
+      document.getElementById('lover-months').textContent = diff1.months;
+      document.getElementById('lover-days').textContent = diff1.days;
+
+      document.getElementById('baby-years').textContent = diff2.years;
+      document.getElementById('baby-months').textContent = diff2.months;
+      document.getElementById('baby-days').textContent = diff2.days;
+    }
+
+    updateClocks();
+    setInterval(updateClocks, 1000); // 每秒更新
+  </script>
+</body>
+</html>
