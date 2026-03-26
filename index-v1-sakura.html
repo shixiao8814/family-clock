@@ -35,6 +35,112 @@
       color: var(--warm-brown);
     }
 
+    /* 小猫动画容器 */
+    .cat-container {
+      position: fixed;
+      z-index: 150;
+    }
+
+    .cat-container.cat1 {
+      animation: cat-walk-right 18s linear infinite;
+    }
+
+    .cat-container.cat2 {
+      animation: cat-walk-left 22s linear infinite;
+      animation-delay: 5s;
+    }
+
+    /* 猫的方向 */
+    .cat1 .cat-svg {
+      transform: scaleX(-1);
+    }
+
+    @keyframes cat-walk-right {
+      0% { left: -150px; bottom: 30px; transform: scaleX(-1); }
+      45% { transform: scaleX(-1); }
+      50% { transform: scaleX(1); }
+      95% { transform: scaleX(1); }
+      100% { left: 100vw; bottom: 30px; transform: scaleX(-1); }
+    }
+
+    @keyframes cat-walk-left {
+      0% { left: 100vw; bottom: 60px; }
+      45% { transform: scaleX(1); }
+      50% { transform: scaleX(-1); }
+      95% { transform: scaleX(-1); }
+      100% { left: -150px; bottom: 60px; }
+    }
+
+    /* 小猫 SVG 动画 */
+    .cat-svg {
+      width: 80px;
+      height: 60px;
+      animation: cat-bounce 0.3s ease-in-out infinite alternate;
+    }
+
+    @keyframes cat-bounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-5px); }
+    }
+
+    /* 腿部动画 */
+    .cat-legs {
+      animation: legs-move 0.2s ease-in-out infinite;
+    }
+
+    @keyframes legs-move {
+      0%, 100% { transform: rotate(-15deg); }
+      50% { transform: rotate(15deg); }
+    }
+
+    .cat-legs.front {
+      transform-origin: 10px 5px;
+    }
+
+    .cat-legs.back {
+      transform-origin: 10px 5px;
+      animation-delay: 0.1s;
+    }
+
+    /* 尾巴动画 */
+    .cat-tail {
+      transform-origin: 5px 20px;
+      animation: tail-wag 0.5s ease-in-out infinite;
+    }
+
+    @keyframes tail-wag {
+      0%, 100% { transform: rotate(-20deg); }
+      50% { transform: rotate(20deg); }
+    }
+
+    /* 模式切换按钮 */
+    .mode-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.9);
+      padding: 8px 16px;
+      border-radius: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: var(--warm-brown);
+      transition: all 0.3s ease;
+    }
+
+    .mode-toggle:hover {
+      background: #fff;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+
+    .mode-icon {
+      font-size: 1.2rem;
+    }
+
     /* 樱花飘落 */
     .sakura {
       position: fixed;
@@ -115,7 +221,7 @@
       z-index: 1;
       max-width: 1000px;
       margin: 0 auto;
-      padding: 60px 24px 80px;
+      padding: 80px 24px 80px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -141,7 +247,7 @@
     .page-subtitle {
       font-size: 1rem;
       color: var(--dusty-rose);
-      margin-bottom: 50px;
+      margin-bottom: 40px;
       letter-spacing: 0.6em;
       font-weight: 400;
     }
@@ -149,15 +255,24 @@
     /* 时钟卡片容器 */
     .clocks-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 30px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    /* 宠物区域 */
+    .pets-row {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
       width: 100%;
     }
 
     .clock-card {
       background: linear-gradient(145deg, #ffffff 0%, #fff8f8 100%);
-      border-radius: 32px;
-      padding: 35px 30px;
+      border-radius: 28px;
+      padding: 28px 24px;
       box-shadow: 
         0 8px 32px rgba(232, 180, 184, 0.15),
         0 0 0 1px rgba(212, 165, 165, 0.1),
@@ -168,10 +283,16 @@
     }
 
     .clock-card:hover {
-      transform: translateY(-8px) scale(1.02);
+      transform: translateY(-6px) scale(1.02);
       box-shadow: 
-        0 20px 60px rgba(232, 180, 184, 0.25),
+        0 16px 50px rgba(232, 180, 184, 0.25),
         0 0 40px rgba(232, 180, 184, 0.2);
+    }
+
+    /* 宠物卡片更小 */
+    .clock-card.pet {
+      padding: 20px;
+      max-width: 200px;
     }
 
     /* 卡片装饰 */
@@ -181,9 +302,9 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 5px;
+      height: 4px;
       background: linear-gradient(90deg, #ffb7c5, #ffc0cb, #ffdaE0);
-      border-radius: 32px 32px 0 0;
+      border-radius: 28px 28px 0 0;
     }
 
     .clock-card.lover::before {
@@ -198,23 +319,30 @@
       background: linear-gradient(90deg, #ffe0b2, #ffcc80, #ffb74d);
     }
 
-    .clock-card.cat::before {
+    .clock-card.pet::before {
       background: linear-gradient(90deg, #e1bee7, #ce93d8, #ba68c8);
     }
 
     /* 卡片图标 */
     .card-icon {
-      width: 64px;
-      height: 64px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 20px;
-      font-size: 2rem;
+      margin-bottom: 15px;
+      font-size: 1.8rem;
       box-shadow: 0 6px 20px rgba(232, 180, 184, 0.3);
       position: relative;
       animation: icon-float 4s ease-in-out infinite;
+    }
+
+    .clock-card.pet .card-icon {
+      width: 44px;
+      height: 44px;
+      font-size: 1.4rem;
+      margin-bottom: 10px;
     }
 
     @keyframes icon-float {
@@ -226,14 +354,6 @@
       background: linear-gradient(135deg, #ffd1d9 0%, #ffb7c5 50%, #ff9eb5 100%);
     }
 
-    .lover {
-      border: 1px solid rgba(232, 180, 184, 0.2);
-    }
-
-    .lover:hover {
-      border-color: rgba(232, 180, 184, 0.4);
-    }
-
     .baby .card-icon {
       background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
     }
@@ -242,16 +362,21 @@
       background: linear-gradient(135deg, #ffe0b2 0%, #ffcc80 100%);
     }
 
-    .cat .card-icon {
+    .pet .card-icon {
       background: linear-gradient(135deg, #e1bee7 0%, #ce93d8 100%);
     }
 
     .card-subtitle {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--dusty-rose);
       margin-top: -4px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       letter-spacing: 0.08em;
+    }
+
+    .clock-card.pet .card-subtitle {
+      font-size: 0.75rem;
+      margin-bottom: 14px;
     }
 
     .lover .card-subtitle {
@@ -266,54 +391,72 @@
       color: #ffb74d;
     }
 
-    .cat .card-subtitle {
+    .pet .card-subtitle {
       color: #ba68c8;
     }
 
     .card-title {
       font-family: 'Ma Shan Zheng', cursive;
-      font-size: 2.2rem;
+      font-size: 2rem;
       color: var(--warm-brown);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       letter-spacing: 0.2em;
     }
 
+    .clock-card.pet .card-title {
+      font-size: 1.4rem;
+    }
+
     .card-start {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--dusty-rose);
-      margin-bottom: 28px;
-      letter-spacing: 0.12em;
+      margin-bottom: 24px;
+      letter-spacing: 0.1em;
+    }
+
+    .clock-card.pet .card-start {
+      font-size: 0.7rem;
+      margin-bottom: 16px;
     }
 
     /* 时间显示 */
     .time-display {
       display: flex;
-      gap: 14px;
+      gap: 10px;
       flex-wrap: wrap;
       justify-content: space-between;
     }
 
+    .clock-card.pet .time-display {
+      gap: 6px;
+    }
+
     .time-unit {
       flex: 1;
-      min-width: 60px;
+      min-width: 50px;
       text-align: center;
-      padding: 16px 10px;
+      padding: 14px 8px;
       background: linear-gradient(145deg, rgba(255,255,255,0.8) 0%, rgba(255,250,250,0.9) 100%);
-      border-radius: 20px;
+      border-radius: 16px;
       border: 1px solid rgba(212, 165, 165, 0.15);
       transition: all 0.4s ease;
       position: relative;
       overflow: hidden;
     }
 
+    .clock-card.pet .time-unit {
+      padding: 10px 6px;
+      min-width: 40px;
+    }
+
     .clock-card:hover .time-unit {
       background: linear-gradient(145deg, #ffffff 0%, #fff5f5 100%);
       border-color: rgba(232, 180, 184, 0.3);
-      transform: translateY(-3px);
+      transform: translateY(-2px);
     }
 
     .time-value {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-weight: 700;
       background: linear-gradient(135deg, #c9a86c 0%, #d4b87a 100%);
       -webkit-background-clip: text;
@@ -324,26 +467,34 @@
       font-variant-numeric: tabular-nums;
     }
 
+    .clock-card.pet .time-value {
+      font-size: 1.2rem;
+    }
+
     .time-label {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       color: var(--dusty-rose);
-      margin-top: 6px;
+      margin-top: 4px;
       letter-spacing: 0.2em;
+    }
+
+    .clock-card.pet .time-label {
+      font-size: 0.55rem;
     }
 
     /* 底部文案 */
     .footer-note {
-      margin-top: 60px;
+      margin-top: 50px;
       text-align: center;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: var(--dusty-rose);
-      letter-spacing: 0.35em;
+      letter-spacing: 0.3em;
     }
 
     .footer-hearts {
-      margin-top: 12px;
-      font-size: 1.4rem;
-      letter-spacing: 0.6em;
+      margin-top: 10px;
+      font-size: 1.2rem;
+      letter-spacing: 0.5em;
       animation: heartbeat 1.5s ease-in-out infinite;
     }
 
@@ -353,7 +504,13 @@
     }
 
     /* 响应式 */
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
+      .clocks-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
       .page-title {
         font-size: 2.2rem;
         letter-spacing: 0.2em;
@@ -363,17 +520,89 @@
         grid-template-columns: 1fr;
       }
 
-      .time-unit {
-        min-width: 55px;
+      .pets-row {
+        flex-direction: column;
+        align-items: center;
       }
 
-      .time-value {
-        font-size: 1.5rem;
+      .clock-card.pet {
+        max-width: 100%;
+      }
+
+      .cat-svg {
+        width: 60px;
+        height: 45px;
       }
     }
   </style>
 </head>
 <body>
+  <!-- 模式切换 -->
+  <div class="mode-toggle" onclick="toggleMode()">
+    <span class="mode-icon">🌸</span>
+    <span class="mode-label">白天</span>
+  </div>
+
+  <!-- 奔跑的小猫动画 -->
+  <div class="cat-container cat1">
+    <svg class="cat-svg" viewBox="0 0 96 72" style="width:96px;height:72px;">
+      <!-- 奶牛猫：上半身黑，肚皮白 -->
+      <g class="cat-body">
+        <!-- 身体 - 黑色部分 -->
+        <ellipse cx="48" cy="45" rx="30" ry="18" fill="#222"/>
+        <!-- 肚皮白色 -->
+        <ellipse cx="48" cy="52" rx="20" ry="10" fill="#fff"/>
+        <!-- 头部 - 黑色 -->
+        <ellipse cx="24" cy="36" r="14" fill="#222"/>
+        <!-- 脸部白色 -->
+        <ellipse cx="24" cy="40" rx="10" ry="8" fill="#fff"/>
+        <!-- 眼睛 -->
+        <ellipse cx="19" cy="34" rx="3" ry="4" fill="#fff"/>
+        <ellipse cx="29" cy="34" rx="3" ry="4" fill="#fff"/>
+        <circle cx="19" cy="34" r="2" fill="#333"/>
+        <circle cx="29" cy="34" r="2" fill="#333"/>
+        <!-- 鼻子 -->
+        <polygon points="24,39 22,42 26,42" fill="#ff9999"/>
+        <!-- 耳朵 -->
+        <polygon points="12,26 18,12 22,26" fill="#222"/>
+        <polygon points="30,26 36,12 40,26" fill="#222"/>
+        <polygon points="14,24 18,16 20,24" fill="#444"/>
+        <polygon points="32,24 36,16 38,24" fill="#444"/>
+        <!-- 腿 - 黑色 -->
+        <rect class="cat-legs front" x="30" y="58" width="6" height="12" rx="3" fill="#222"/>
+        <rect class="cat-legs front" x="42" y="58" width="6" height="12" rx="3" fill="#222"/>
+        <rect class="cat-legs back" x="58" y="58" width="6" height="12" rx="3" fill="#222"/>
+        <rect class="cat-legs back" x="70" y="58" width="6" height="12" rx="3" fill="#222"/>
+        <!-- 尾巴 -->
+        <path class="cat-tail" d="M78,40 Q90,28 84,15" stroke="#222" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <!-- 白围脖 -->
+        <path d="M14,42 Q24,48 34,42" stroke="#fff" stroke-width="6" fill="none"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="cat-container cat2">
+    <svg class="cat-svg" viewBox="0 0 80 60" style="width:80px;height:60px;">
+      <!-- 雀猫（橘猫）- 较小 -->
+      <g class="cat-body">
+        <ellipse cx="40" cy="38" rx="25" ry="15" fill="#ffb74d"/>
+        <circle cx="20" cy="30" r="12" fill="#ffb74d"/>
+        <polygon points="10,22 15,12 20,22" fill="#ffb74d"/>
+        <polygon points="25,22 30,12 35,22" fill="#ffb74d"/>
+        <ellipse cx="16" cy="28" rx="2.5" ry="3" fill="#333"/>
+        <ellipse cx="24" cy="28" rx="2.5" ry="3" fill="#333"/>
+        <polygon points="20,32 19,34 21,34" fill="#ff9999"/>
+        <rect class="cat-legs front" x="25" y="48" width="4" height="10" rx="2" fill="#ffb74d"/>
+        <rect class="cat-legs front" x="35" y="48" width="4" height="10" rx="2" fill="#ffb74d"/>
+        <rect class="cat-legs back" x="48" y="48" width="4" height="10" rx="2" fill="#ffb74d"/>
+        <rect class="cat-legs back" x="58" y="48" width="4" height="10" rx="2" fill="#ffb74d"/>
+        <path class="cat-tail" d="M65,35 Q75,25 70,15" stroke="#e65100" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <ellipse cx="45" cy="35" rx="8" ry="4" fill="#e65100" opacity="0.3"/>
+        <circle cx="30" cy="42" r="4" fill="#e65100" opacity="0.3"/>
+      </g>
+    </svg>
+  </div>
+
   <!-- 樱花容器 -->
   <div id="sakura-container"></div>
 
@@ -395,6 +624,7 @@
     <h1 class="page-title">我们的时光</h1>
     <p class="page-subtitle">爱 · 是与你度过的每一个日夜</p>
 
+    <!-- 人物区域 -->
     <div class="clocks-grid">
       <!-- 大宝 -->
       <div class="clock-card lover">
@@ -421,7 +651,7 @@
       <!-- 小宝 -->
       <div class="clock-card baby">
         <div class="card-icon">👶</div>
-        <h2 class="card-title">小宝</h2>
+        <h2 class="card-title">小猫</h2>
         <p class="card-start">出生于 2024.08.06</p>
         <p class="card-subtitle">来到我们身边</p>
         <div class="time-display">
@@ -440,7 +670,7 @@
         </div>
       </div>
 
-      <!-- 小崽（预产期） -->
+      <!-- 小崽 -->
       <div class="clock-card pregnant">
         <div class="card-icon">🤰</div>
         <h2 class="card-title">小崽</h2>
@@ -461,13 +691,16 @@
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- 奶牛猫 -->
-      <div class="clock-card cat">
+    <!-- 宠物区域 -->
+    <div class="pets-row">
+      <!-- 猫子 -->
+      <div class="clock-card pet">
         <div class="card-icon">🐈‍⬛</div>
-        <h2 class="card-title">奶牛</h2>
+        <h2 class="card-title">猫子</h2>
         <p class="card-start">生日 2019.07.19</p>
-        <p class="card-subtitle">陪伴了我们</p>
+        <p class="card-subtitle">奶牛猫</p>
         <div class="time-display">
           <div class="time-unit">
             <span class="time-value" id="cat1-years">0</span>
@@ -484,12 +717,12 @@
         </div>
       </div>
 
-      <!-- 雀猫 -->
-      <div class="clock-card cat">
+      <!-- 小咪 -->
+      <div class="clock-card pet">
         <div class="card-icon">🐱</div>
-        <h2 class="card-title">雀猫</h2>
+        <h2 class="card-title">小咪</h2>
         <p class="card-start">生日 2023.05.23</p>
-        <p class="card-subtitle">陪伴了我们</p>
+        <p class="card-subtitle">雀猫</p>
         <div class="time-display">
           <div class="time-unit">
             <span class="time-value" id="cat2-years">0</span>
@@ -512,6 +745,11 @@
   </div>
 
   <script>
+    // 模式切换
+    function toggleMode() {
+      window.location.href = 'index-v4-cozy.html';
+    }
+
     // 樱花飘落
     function createSakura() {
       const container = document.getElementById('sakura-container');
@@ -548,7 +786,7 @@
       return new Date(year, month - 1, day);
     }
 
-    // 计算时间差（已过去的时间）
+    // 计算时间差
     function getDiff(startDate, endDate) {
       let years = endDate.getFullYear() - startDate.getFullYear();
       let months = endDate.getMonth() - startDate.getMonth();
@@ -568,7 +806,7 @@
       return { years, months, days };
     }
 
-    // 计算到预产期的倒计时
+    // 计算倒计时
     function getCountdown(targetDate) {
       const now = new Date();
       const diff = targetDate - now;
@@ -601,21 +839,21 @@
       document.getElementById('baby-months').textContent = diff2.months;
       document.getElementById('baby-days').textContent = diff2.days;
       
-      // 小崽（预产期倒计时）
+      // 小崽
       const dueDate = parseDate('2026.07.09');
       const countdown = getCountdown(dueDate);
       document.getElementById('pregnant-days').textContent = countdown.days;
       document.getElementById('pregnant-weeks').textContent = countdown.weeks;
       document.getElementById('pregnant-months').textContent = countdown.months;
       
-      // 奶牛猫
+      // 猫子
       const cat1Start = parseDate('2019.07.19');
       const diff3 = getDiff(cat1Start, now);
       document.getElementById('cat1-years').textContent = diff3.years;
       document.getElementById('cat1-months').textContent = diff3.months;
       document.getElementById('cat1-days').textContent = diff3.days;
       
-      // 雀猫
+      // 小咪
       const cat2Start = parseDate('2023.05.23');
       const diff4 = getDiff(cat2Start, now);
       document.getElementById('cat2-years').textContent = diff4.years;

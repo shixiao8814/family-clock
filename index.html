@@ -4,24 +4,42 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>我们的时光 | 家庭时钟</title>
-  <script>
-    function getBeijingHour() {
-      const now = new Date();
-      const beijingTime = new Date(now.getTime() + (now.getTimezoneOffset() + 8) * 60 * 1000);
-      return beijingTime.getHours();
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: #fef9f3;
     }
-
-    const hour = getBeijingHour();
-    
-    // 白天：樱花版，晚上：壁炉版
-    if (hour >= 6 && hour < 18) {
-      window.location.href = 'index-v1-sakura.html';
-    } else {
-      window.location.href = 'index-v4-cozy.html';
+    .btn {
+      padding: 20px 40px;
+      margin: 10px;
+      font-size: 1.2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.2s;
     }
-  </script>
+    .btn:hover {
+      transform: scale(1.05);
+    }
+    .btn-day {
+      background: linear-gradient(135deg, #ffb7c5, #ffd1d9);
+      color: #8b7355;
+    }
+    .btn-night {
+      background: linear-gradient(135deg, #2d2520, #4a3728);
+      color: #f5e6d3;
+    }
+  </style>
 </head>
 <body>
-  <p style="text-align:center;padding-top:100px;font-family:sans-serif;">正在加载...</p>
+  <div>
+    <button class="btn btn-day" onclick="location.href='index-v1-sakura.html'">🌸 白天模式（樱花）</button>
+    <button class="btn btn-night" onclick="location.href='index-v4-cozy.html'">🔥 晚上模式（篝火）</button>
+  </div>
 </body>
 </html>
