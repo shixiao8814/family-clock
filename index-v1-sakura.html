@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我们的时光 | 家庭时钟 - 樱花版</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #fef9f3;
+      --warm-white: #fffaf5;
+      --rose: #e8b4b8;
+      --dusty-rose: #d4a5a5;
+      --soft-pink: #f5d0c5;
+      --sage: #b8c4a8;
+      --warm-brown: #8b7355;
+      --gold: #c9a86c;
+      --soft-shadow: rgba(139, 115, 85, 0.08);
+      --bloom: rgba(232, 180, 184, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Noto Serif SC', serif;
+      background: linear-gradient(180deg, #fff5f5 0%, #fff0f0 50%, #ffeef0 100%);
+      overflow-x: hidden;
+      color: var(--warm-brown);
+    }
+
+    /* 樱花飘落 */
+    .sakura {
+      position: fixed;
+      top: -20px;
+      z-index: 100;
+      pointer-events: none;
+      animation: fall linear forwards;
+      opacity: 0.8;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh) rotate(360deg);
+      }
+    }
+
+    /* 背景装饰 */
+    .bg-decoration {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .floating-heart {
+      position: absolute;
+      opacity: 0.15;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .floating-heart:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
+    .floating-heart:nth-child(2) { top: 20%; right: 10%; animation-delay: 2s; }
+    .floating-heart:nth-child(3) { top: 60%; left: 8%; animation-delay: 4s; }
+    .floating-heart:nth-child(4) { top: 80%; right: 5%; animation-delay: 1s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+
+    .floating-heart svg {
+      width: 30px;
+      height: 30px;
+      fill: var(--dusty-rose);
+    }
+
+    /* 渐变光晕 */
+    .glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.35;
+    }
+
+    .glow-1 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(255,182,193,0.6) 0%, rgba(255,192,203,0) 70%);
+      top: -150px;
+      right: -150px;
+    }
+
+    .glow-2 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255,220,230,0.5) 0%, rgba(255,240,245,0) 70%);
+      bottom: -100px;
+      left: -100px;
+    }
+
+    /* 主容器 */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 主标题 */
+    .page-title {
+      font-family: 'Ma Shan Zheng', cursive;
+      font-size: 3rem;
+      color: var(--warm-brown);
+      margin-bottom: 12px;
+      text-shadow: 0 2px 20px var(--soft-shadow), 0 0 40px rgba(232, 180, 184, 0.3);
+      letter-spacing: 0.3em;
+      animation: title-glow 3s ease-in-out infinite;
+    }
+
+    @keyframes title-glow {
+      0%, 100% { text-shadow: 0 2px 20px var(--soft-shadow), 0 0 40px rgba(232, 180, 184, 0.3); }
+      50% { text-shadow: 0 2px 20px var(--soft-shadow), 0 0 60px rgba(232, 180, 184, 0.5); }
+    }
+
+    .page-subtitle {
+      font-size: 1rem;
+      color: var(--dusty-rose);
+      margin-bottom: 50px;
+      letter-spacing: 0.6em;
+      font-weight: 400;
+    }
+
+    /* 时钟卡片容器 */
+    .clocks-grid {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .clock-card {
+      flex: 1;
+      min-width: 320px;
+      max-width: 420px;
+      background: linear-gradient(145deg, #ffffff 0%, #fff8f8 100%);
+      border-radius: 32px;
+      padding: 40px 36px;
+      box-shadow: 
+        0 8px 32px rgba(232, 180, 184, 0.15),
+        0 0 0 1px rgba(212, 165, 165, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .clock-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 
+        0 20px 60px rgba(232, 180, 184, 0.25),
+        0 0 40px rgba(232, 180, 184, 0.2);
+    }
+
+    /* 卡片装饰 */
+    .clock-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #ffb7c5, #ffc0cb, #ffdaE0);
+      border-radius: 32px 32px 0 0;
+    }
+
+    .clock-card.lover::before {
+      background: linear-gradient(90deg, #ff9eb5, #ffb7c5, #ffd1d9);
+    }
+
+    .clock-card.baby::before {
+      background: linear-gradient(90deg, #c8e6c9, #a5d6a7, #c8e6c9);
+    }
+
+    /* 卡片图标 */
+    .card-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 2rem;
+      box-shadow: 0 6px 20px rgba(232, 180, 184, 0.3);
+      position: relative;
+      animation: icon-float 4s ease-in-out infinite;
+    }
+
+    @keyframes icon-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .lover .card-icon {
+      background: linear-gradient(135deg, #ffd1d9 0%, #ffb7c5 50%, #ff9eb5 100%);
+    }
+
+    .lover {
+      border: 1px solid rgba(232, 180, 184, 0.2);
+    }
+
+    .lover:hover {
+      border-color: rgba(232, 180, 184, 0.4);
+    }
+
+    .baby .card-icon {
+      background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+    }
+
+    .card-subtitle {
+      font-size: 0.9rem;
+      color: var(--dusty-rose);
+      margin-top: -4px;
+      margin-bottom: 24px;
+      letter-spacing: 0.08em;
+    }
+
+    .lover .card-subtitle {
+      font-style: italic;
+    }
+
+    .baby .card-subtitle {
+      color: #81c784;
+    }
+
+    .card-title {
+      font-family: 'Ma Shan Zheng', cursive;
+      font-size: 2.4rem;
+      color: var(--warm-brown);
+      margin-bottom: 8px;
+      letter-spacing: 0.2em;
+    }
+
+    .card-start {
+      font-size: 0.85rem;
+      color: var(--dusty-rose);
+      margin-bottom: 28px;
+      letter-spacing: 0.12em;
+    }
+
+    /* 时间显示 */
+    .time-display {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .time-unit {
+      flex: 1;
+      min-width: 70px;
+      text-align: center;
+      padding: 18px 12px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.8) 0%, rgba(255,250,250,0.9) 100%);
+      border-radius: 20px;
+      border: 1px solid rgba(212, 165, 165, 0.15);
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .clock-card:hover .time-unit {
+      background: linear-gradient(145deg, #ffffff 0%, #fff5f5 100%);
+      border-color: rgba(232, 180, 184, 0.3);
+      transform: translateY(-3px);
+    }
+
+    .time-value {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #c9a86c 0%, #d4b87a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+      line-height: 1.3;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .time-label {
+      font-size: 0.75rem;
+      color: var(--dusty-rose);
+      margin-top: 6px;
+      letter-spacing: 0.2em;
+    }
+
+    /* 底部文案 */
+    .footer-note {
+      margin-top: 60px;
+      text-align: center;
+      font-size: 0.95rem;
+      color: var(--dusty-rose);
+      letter-spacing: 0.35em;
+    }
+
+    .footer-hearts {
+      margin-top: 12px;
+      font-size: 1.4rem;
+      letter-spacing: 0.6em;
+      animation: heartbeat 1.5s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      .page-title {
+        font-size: 2.2rem;
+        letter-spacing: 0.2em;
+      }
+
+      .clocks-grid {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .clock-card {
+        min-width: 100%;
+      }
+
+      .time-unit {
+        min-width: 60px;
+      }
+
+      .time-value {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 樱花容器 -->
+  <div id="sakura-container"></div>
+
+  <div class="bg-decoration">
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="floating-heart">
+      <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+    <div class="floating-heart">
+      <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+    <div class="floating-heart">
+      <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1 class="page-title">我们的时光</h1>
+    <p class="page-subtitle">爱 · 是与你度过的每一个日夜</p>
+
+    <div class="clocks-grid">
+      <div class="clock-card lover">
+        <div class="card-icon">💕</div>
+        <h2 class="card-title">大宝</h2>
+        <p class="card-start">我们在一起 2014.02.24</p>
+        <p class="card-subtitle">已经相爱了</p>
+        <div class="time-display">
+          <div class="time-unit">
+            <span class="time-value" id="lover-years">0</span>
+            <span class="time-label">年</span>
+          </div>
+          <div class="time-unit">
+            <span class="time-value" id="lover-months">0</span>
+            <span class="time-label">月</span>
+          </div>
+          <div class="time-unit">
+            <span class="time-value" id="lover-days">0</span>
+            <span class="time-label">天</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="clock-card baby">
+        <div class="card-icon">👶</div>
+        <h2 class="card-title">小宝</h2>
+        <p class="card-start">出生于 2024.08.06</p>
+        <p class="card-subtitle">来到我们身边</p>
+        <div class="time-display">
+          <div class="time-unit">
+            <span class="time-value" id="baby-years">0</span>
+            <span class="time-label">年</span>
+          </div>
+          <div class="time-unit">
+            <span class="time-value" id="baby-months">0</span>
+            <span class="time-label">月</span>
+          </div>
+          <div class="time-unit">
+            <span class="time-value" id="baby-days">0</span>
+            <span class="time-label">天</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="footer-note">感谢你陪我走过岁月 · 感谢宝宝选择我们做父母</p>
+    <p class="footer-hearts">❤️ ❤️ ❤️</p>
+  </div>
+
+  <script>
+    // 樱花飘落
+    function createSakura() {
+      const container = document.getElementById('sakura-container');
+      const sakura = document.createElement('div');
+      sakura.className = 'sakura';
+      
+      const size = Math.random() * 15 + 8;
+      const left = Math.random() * 100;
+      const duration = Math.random() * 8 + 6;
+      const delay = Math.random() * 5;
+      
+      sakura.style.cssText = `
+        width: ${size}px;
+        height: ${size}px;
+        left: ${left}vw;
+        animation-duration: ${duration}s;
+        animation-delay: ${delay}s;
+        background: radial-gradient(circle, rgba(255,220,230,0.9) 30%, rgba(255,200,210,0.5) 70%);
+        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+        box-shadow: 0 0 10px rgba(255,200,210,0.5);
+      `;
+      
+      container.appendChild(sakura);
+      
+      setTimeout(() => sakura.remove(), duration * 1000 + delay * 1000);
+    }
+
+    setInterval(createSakura, 400);
+    for (let i = 0; i < 15; i++) setTimeout(createSakura, i * 200);
+
+    // 时钟计算
+    function parseDate(str) {
+      const [year, month, day] = str.split('.').map(Number);
+      return new Date(year, month - 1, day);
+    }
+
+    function getDiff(startDate, endDate) {
+      let years = endDate.getFullYear() - startDate.getFullYear();
+      let months = endDate.getMonth() - startDate.getMonth();
+      let days = endDate.getDate() - startDate.getDate();
+
+      if (days < 0) {
+        months--;
+        const prevMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0);
+        days += prevMonth.getDate();
+      }
+
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      return { years, months, days };
+    }
+
+    function updateClocks() {
+      const now = new Date();
+      const loverStart = parseDate('2014.02.24');
+      const babyStart = parseDate('2024.08.06');
+
+      const diff1 = getDiff(loverStart, now);
+      const diff2 = getDiff(babyStart, now);
+
+      document.getElementById('lover-years').textContent = diff1.years;
+      document.getElementById('lover-months').textContent = diff1.months;
+      document.getElementById('lover-days').textContent = diff1.days;
+
+      document.getElementById('baby-years').textContent = diff2.years;
+      document.getElementById('baby-months').textContent = diff2.months;
+      document.getElementById('baby-days').textContent = diff2.days;
+    }
+
+    updateClocks();
+    setInterval(updateClocks, 1000);
+  </script>
+</body>
+</html>
